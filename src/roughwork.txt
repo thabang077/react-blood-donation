@@ -1,0 +1,31 @@
+## App Structure
+
+> SRC Folder
+
+----> actions
+| |
+| |-- api.js (handle all http requst)
+| |-- donationCandidate.js (Redux actions and action creators)
+| |-- store.js (configure redux store)
+
+----> components
+| |
+| |--DCandidateForm.js (form Operations)
+| |--DCandidates.js (list of records)
+| |--useForm.js (handles common form operations)
+
+----> reducers
+| |
+| |--dCandidate.js
+| |--index.js
+
+| |--App.js
+| |--index.js
+| |--index.css
+
+
+Install the following:
+Redux
+React-redux
+redux-thunk
+
