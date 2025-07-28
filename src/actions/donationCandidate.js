@@ -2,17 +2,19 @@ import api from "./api";
 
 export const ACTION_TYPES = {
   CRAETE: "CREATE",
-  FEACT_ALL: "FEACT_ALL",
   UPDATE: "UPDATE",
   DELETE: "DELETE",
+  FETCH_ALL: "FETCH_ALL",
 };
 
-export const feachall = () => (dispatch) => {
+export const fetchAll = () => (dispatch) => {
   api
     .DonationCandidate()
+    .fetchAll()
     .then((response) => {
+      // console.log(response)
       dispatch({
-        type: ACTION_TYPES.FEACT_ALL,
+        type: ACTION_TYPES.FETCH_ALL,
         payload: response.data,
       });
     })

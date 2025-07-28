@@ -1,5 +1,7 @@
+import React from "react";
+
 const DonationCandidatesForm = (props) => {
-  return <div>From DonationCandidates Form</div>;
+  return <div>From DonationCandidate Form</div>;
 };
 
 export default DonationCandidatesForm;

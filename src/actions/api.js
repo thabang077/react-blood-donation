@@ -1,4 +1,4 @@
-import DonationCandidates from "../components/DonationCandidates";
+// import DonationCandidates from "../components/DonationCandidates";
 import axios from "axios";
 
 const baseUrl = "http://localhost:5114/api/"; // Replace with your actual API base URL
