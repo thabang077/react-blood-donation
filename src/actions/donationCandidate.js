@@ -12,7 +12,7 @@ export const fetchAll = () => (dispatch) => {
     .DonationCandidate()
     .fetchAll()
     .then((response) => {
-      // console.log(response)
+      // console.log(response);
       dispatch({
         type: ACTION_TYPES.FETCH_ALL,
         payload: response.data,

@@ -11,7 +11,7 @@ function App() {
     <Provider store={store}>
       <Container maxWidth="lg">{/* <DonationCandidates /> */}</Container>
       <DonationCandidates />
-      <DonationCandidatesForm />
+      {/* <DonationCandidatesForm /> */}
     </Provider>
   );
 }
