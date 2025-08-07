@@ -43,7 +43,7 @@ const DonationCandidates = ({ classes, ...props }) => {
               </TableHead>
               <TableBody>
                 {props.DonationCandidateList.map((record, index) => {
-                  console.log(props.DonationCandidateList);
+                  // console.log(props.DonationCandidateList);
 
                   return (
                     <TableRow key={index} hover>

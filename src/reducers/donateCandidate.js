@@ -6,7 +6,7 @@ const initialState = {
 export const donatetionCandidateReducer = (state = initialState, action) => {
   switch (action.type) {
     case ACTION_TYPES.FETCH_ALL:
-      console.log("Reducer Payload:", action.payload); // Debugging reducer payload
+      //  console.log("Reducer Payload:", action.payload); Debugging reducer payload
 
       return {
         ...state,

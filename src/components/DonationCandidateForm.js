@@ -5,6 +5,7 @@ import {
   MenuItem,
   TextField,
   Select,
+  Button,
   // withStyles,
 } from "@mui/material";
 import React, { useState } from "react";
@@ -21,6 +22,8 @@ import useForm from "./UseForm";
 //   },
 // };
 
+// Material-UI select component requires a label width to be set for alighnment purposes.
+
 const initialFieldValues = {
   fullName: "",
   phoneNumber: "",
@@ -30,14 +33,25 @@ const initialFieldValues = {
   bloodGroup: "",
 };
 
-const DonationCandidatesForm = (classes, ...props) => {
+const DonationCandidatesForm = (props) => {
   // const [values, setValues] = useState(initialFieldvalues);
+
+  const inputLabel = React.useRef(null);
+  const [labelWidth, setLabelWidth] = useState(0);
+  React.useEffect(() => {
+    setLabelWidth(inputLabel.current.offsetWidth);
+  }, []);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(values);
+  };
 
   const [values, setValues, handleInputChange] = useForm(initialFieldValues);
 
   return (
     <>
-      <form autoComplete="off" noValidate>
+      <form autoComplete="off" noValidate onSubmit={handleSubmit}>
         <Grid container>
           <Grid size={6}>
             <TextField
@@ -66,21 +80,22 @@ const DonationCandidatesForm = (classes, ...props) => {
               // size="medium"
               style={{ minWidth: "204px" }} // className={classes.formControl}
             >
-              <InputLabel>Blood Group</InputLabel>
+              <InputLabel ref={inputLabel}>Blood Group</InputLabel>
               <Select
                 name="bloodGroup"
                 value={values.bloodGroup}
                 onChange={handleInputChange}
+                labelWidth={labelWidth}
               >
                 <MenuItem value="">Select Blood Group</MenuItem>
-                <MenuItem value="A+">A +ve</MenuItem> *
-                <MenuItem value="A+">A -ve</MenuItem>
-                <MenuItem value="A+">B +ve</MenuItem>
-                <MenuItem value="A+">B -ve</MenuItem>
-                <MenuItem value="A+">AB +ve</MenuItem>
-                <MenuItem value="A+">AB -ve</MenuItem>
-                <MenuItem value="A+">O +ve</MenuItem>
-                <MenuItem value="A+">O -ve</MenuItem>
+                <MenuItem value="A+">A +ve</MenuItem>
+                <MenuItem value="A-">A -ve</MenuItem>
+                <MenuItem value="B+">B +ve</MenuItem>
+                <MenuItem value="B-">B -ve</MenuItem>
+                <MenuItem value="AB+">AB +ve</MenuItem>
+                <MenuItem value="AB-">AB -ve</MenuItem>
+                <MenuItem value="O+">O +ve</MenuItem>
+                <MenuItem value="O-">O -ve</MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -106,6 +121,17 @@ const DonationCandidatesForm = (classes, ...props) => {
               value={values.address}
               onChange={handleInputChange}
             />
+            <div>
+              <Button
+                variant="contained"
+                color="primary"
+                type="submit"
+                style={{ margin: 10 }}
+              >
+                Submit
+              </Button>
+              <Button variant="outlined">Reset</Button>
+            </div>
           </Grid>
         </Grid>
       </form>
