@@ -6,23 +6,25 @@ import {
   TextField,
   Select,
   Button,
-  // withStyles,
+  FormHelperText,
 } from "@mui/material";
 import React, { useState } from "react";
 import useForm from "./UseForm";
-// import { makeStyles } from "@mui/styles";
-// import { withStyles } from "@mui/material/styles";
+import { withStyles } from "@mui/styles";
 
-// const withStyles = {
-//   root: {
-//     FormControl: {
-//       // margin: theme.spacing(1),
-//       minWidth: 230,
-//     },
-//   },
-// };
-
-// Material-UI select component requires a label width to be set for alighnment purposes.
+//Styling
+const useStyles = () => ({
+  root: {
+    "& .MuiTextField-root": {
+      margin: "10px",
+      minWidth: 230,
+    },
+  },
+  formControl: {
+    margin: "10px",
+    minWidth: 230,
+  },
+});
 
 const initialFieldValues = {
   fullName: "",
@@ -33,59 +35,102 @@ const initialFieldValues = {
   bloodGroup: "",
 };
 
-const DonationCandidatesForm = (props) => {
-  // const [values, setValues] = useState(initialFieldvalues);
+const DonationCandidatesForm = ({ classes }) => {
+  // Validation
+  const validate = (fieldValues = values) => {
+    let temp = { ...errors };
+
+    if ("fullName" in fieldValues)
+      temp.fullName =
+        fieldValues.fullName.trim() !== "" ? "" : "Full Name is required";
+
+    if ("phoneNumber" in fieldValues)
+      temp.phoneNumber = /^[0-9]{10}$/.test(fieldValues.phoneNumber)
+        ? ""
+        : "Phone Number must be 10 digits";
+
+    if ("bloodGroup" in fieldValues)
+      temp.bloodGroup = fieldValues.bloodGroup ? "" : "Blood Group is required";
+
+    if ("email" in fieldValues)
+      temp.email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fieldValues.email)
+        ? ""
+        : "Invalid email address";
+
+    setErrors({
+      ...temp,
+    });
+
+    if (fieldValues === values)
+      return Object.values(temp).every((x) => x === "");
+  };
+
+  const [values, setValues, errors, setErrors, handleInputChange, resetForm] =
+    useForm(initialFieldValues, validate);
 
   const inputLabel = React.useRef(null);
   const [labelWidth, setLabelWidth] = useState(0);
+
   React.useEffect(() => {
-    setLabelWidth(inputLabel.current.offsetWidth);
+    if (inputLabel.current) {
+      setLabelWidth(inputLabel.current.offsetWidth);
+    }
   }, []);
 
+  // Submit handler
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(values);
+    if (validate()) {
+      window.alert("Validation successful");
+      resetForm();
+    }
   };
-
-  const [values, setValues, handleInputChange] = useForm(initialFieldValues);
 
   return (
     <>
-      <form autoComplete="off" noValidate onSubmit={handleSubmit}>
+      <form
+        autoComplete="off"
+        noValidate
+        className={classes.root}
+        onSubmit={handleSubmit}
+      >
         <Grid container>
           <Grid size={6}>
             <TextField
               name="fullName"
               variant="outlined"
               label="full Name"
-              value={values.fullName}
+              value={values.fullName || initialFieldValues.fullName}
               onChange={handleInputChange}
+              required={true}
+              error={Boolean(errors.fullName)}
+              helperText={errors.fullName}
             />
             <TextField
               name="email"
               variant="outlined"
               label="Email"
-              value={values.email}
+              value={values.email || initialFieldValues.email}
               onChange={handleInputChange}
+              required={true}
+              error={Boolean(errors.email)}
+              helperText={errors.email}
             />
-            {/* <TextField
-              name="bloodGroup"
-              variant="outlined"
-              label="Blood Group"
-              value={values.bloodGroup}
-              onChange={handleInputChange}
-            /> */}
+
             <FormControl
+              required
               variant="outlined"
-              // size="medium"
-              style={{ minWidth: "204px" }} // className={classes.formControl}
+              style={{ minWidth: "204px" }}
+              error={Boolean(errors.bloodGroup)}
+              helperText={errors.bloodGroup}
             >
               <InputLabel ref={inputLabel}>Blood Group</InputLabel>
               <Select
                 name="bloodGroup"
-                value={values.bloodGroup}
+                value={values.bloodGroup || initialFieldValues.bloodGroup}
                 onChange={handleInputChange}
-                labelWidth={labelWidth}
+                labelwidth={labelWidth}
+                className={classes.formControl}
               >
                 <MenuItem value="">Select Blood Group</MenuItem>
                 <MenuItem value="A+">A +ve</MenuItem>
@@ -97,6 +142,7 @@ const DonationCandidatesForm = (props) => {
                 <MenuItem value="O+">O +ve</MenuItem>
                 <MenuItem value="O-">O -ve</MenuItem>
               </Select>
+              {<FormHelperText>{errors.bloodGroup}</FormHelperText>}
             </FormControl>
           </Grid>
           <Grid size={6}>
@@ -104,21 +150,24 @@ const DonationCandidatesForm = (props) => {
               name="phoneNumber"
               variant="outlined"
               label="Phone Number"
-              value={values.phoneNumber}
+              value={values.phoneNumber || initialFieldValues.phoneNumber}
               onChange={handleInputChange}
+              required={true}
+              error={Boolean(errors.phoneNumber)}
+              helperText={errors.phoneNumber}
             />
             <TextField
               name="age"
               variant="outlined"
               label="Age"
-              value={values.age}
+              value={values.age || initialFieldValues.age}
               onChange={handleInputChange}
             />
             <TextField
               name="address"
               variant="outlined"
               label="Address"
-              value={values.address}
+              value={values.address || initialFieldValues.address}
               onChange={handleInputChange}
             />
             <div>
@@ -139,4 +188,4 @@ const DonationCandidatesForm = (props) => {
   );
 };
 
-export default DonationCandidatesForm;
+export default withStyles(useStyles)(DonationCandidatesForm);
