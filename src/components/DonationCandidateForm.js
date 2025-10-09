@@ -8,9 +8,11 @@ import {
   Button,
   FormHelperText,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import useForm from "./UseForm";
 import { withStyles } from "@mui/styles";
+import { connect } from "react-redux";
+import * as actions from "../actions/donationCandidate";
 
 //Styling
 const useStyles = () => ({
@@ -35,7 +37,7 @@ const initialFieldValues = {
   bloodGroup: "",
 };
 
-const DonationCandidatesForm = ({ classes }) => {
+const DonationCandidatesForm = ({ classes, ...props }) => {
   // Validation
   const validate = (fieldValues = values) => {
     let temp = { ...errors };
@@ -81,10 +83,18 @@ const DonationCandidatesForm = ({ classes }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validate()) {
-      window.alert("Validation successful");
-      resetForm();
+      props.createDonatingCandidates(values, () => {
+        window.alert("Inserted.");
+      });
     }
   };
+
+  useEffect(() => {
+    if (props.currentId != 0)
+      setValues({
+        ...props.DonationCandidateList.find((x) => x.id == props.currentId),
+      });
+  }, [props.currentId]);
 
   return (
     <>
@@ -188,4 +198,16 @@ const DonationCandidatesForm = ({ classes }) => {
   );
 };
 
-export default withStyles(useStyles)(DonationCandidatesForm);
+const mapStateToProps = (state) => ({
+  DonationCandidateList: state.DonationCandidate.list,
+});
+
+const mapActionsToProps = {
+  createDonatingCandidates: actions.create,
+  updateDonatingCandidates: actions.update,
+};
+
+export default connect(
+  mapStateToProps,
+  mapActionsToProps
+)(withStyles(useStyles)(DonationCandidatesForm));

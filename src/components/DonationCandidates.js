@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import React, { use } from "react";
+import React, { use, useState } from "react";
 import * as actions from "../actions/donationCandidate";
 import { useEffect } from "react";
 import {
@@ -11,20 +11,25 @@ import {
   TableRow,
   TableCell,
   TableBody,
+  ButtonGroup,
 } from "@mui/material";
 import DonationCandidatesForm from "./DonationCandidateForm";
 import { withStyles } from "@mui/styles";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const DonationCandidates = ({ classes, ...props }) => {
+  const [currentId, setCurrentId] = useState(null);
+
   useEffect(() => {
     props.fetchAllDonatingCandidates();
   }, []);
 
   return (
-    <Paper>
+    <Paper elevation={3}>
       <Grid container>
         <Grid size={6}>
-          <DonationCandidatesForm />
+          <DonationCandidatesForm {...{ currentId, setCurrentId }} />
         </Grid>
         <Grid size={6}>
           <TableContainer>
@@ -43,6 +48,21 @@ const DonationCandidates = ({ classes, ...props }) => {
                       <TableCell>{record.fullName}</TableCell>
                       <TableCell>{record.phoneNumber}</TableCell>
                       <TableCell>{record.bloodGroup}</TableCell>
+                      <tableCell>
+                        <ButtonGroup variant="text">
+                          <button>
+                            <EditIcon
+                              color="primary"
+                              onClick={() => {
+                                setCurrentId(record.id);
+                              }}
+                            />
+                          </button>
+                          <button>
+                            <DeleteIcon color="secondary" />
+                          </button>
+                        </ButtonGroup>
+                      </tableCell>
                     </TableRow>
                   );
                 })}
