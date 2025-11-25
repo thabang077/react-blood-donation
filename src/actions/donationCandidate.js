@@ -1,7 +1,7 @@
 import api from "./api";
 
 export const ACTION_TYPES = {
-  CRAETE: "CREATE",
+  CREATE: "CREATE",
   UPDATE: "UPDATE",
   DELETE: "DELETE",
   FETCH_ALL: "FETCH_ALL",
@@ -17,7 +17,7 @@ export const fetchAll = () => (dispatch) => {
     .DonationCandidate()
     .fetchAll()
     .then((response) => {
-      // console.log(response);
+      console.log(response);
       dispatch({
         type: ACTION_TYPES.FETCH_ALL,
         payload: response.data,
@@ -26,6 +26,7 @@ export const fetchAll = () => (dispatch) => {
     .catch((error) => console.log(error));
 };
 
+//Create function
 export const create = (data, onSuccess) => (dispatch) => {
   data = FormData(data);
 
@@ -34,7 +35,7 @@ export const create = (data, onSuccess) => (dispatch) => {
     .create(data)
     .then((res) => {
       dispatch({
-        type: ACTION_TYPES.CRAETE,
+        type: ACTION_TYPES.CREATE,
         payload: res.data,
       });
       onSuccess();
@@ -42,6 +43,7 @@ export const create = (data, onSuccess) => (dispatch) => {
     .catch((error) => console.log(error));
 };
 
+//Update function
 export const update = (id, data, onSuccess) => (dispatch) => {
   data = FormData(data);
 
@@ -51,28 +53,26 @@ export const update = (id, data, onSuccess) => (dispatch) => {
     .then((res) => {
       dispatch({
         type: ACTION_TYPES.UPDATE,
-        payload: id,
-        ...data,
+        payload: { id, ...data },
       });
+      dispatch(fetchAll());
       onSuccess();
     })
     .catch((error) => console.log(error));
 };
 
-export const deelete =
-  (id, onSuccess) =>
-  (
-    dispatch //USed deelete because delete is used by React
-  ) => {
-    api
-      .DonationCandidate()
-      .delete(id)
-      .then((res) => {
-        dispatch({
-          type: ACTION_TYPES.DELETE,
-          payload: id,
-        });
-        onSuccess();
-      })
-      .catch((error) => console.log(error));
-  };
+//Delete function
+export const deelete = (id, onSuccess) => (dispatch) => {
+  api
+    .DonationCandidate()
+    .delete(id)
+    .then((res) => {
+      dispatch({
+        type: ACTION_TYPES.DELETE,
+        payload: id,
+      });
+      dispatch(fetchAll());
+      onSuccess();
+    })
+    .catch((error) => console.log(error));
+};
