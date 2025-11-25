@@ -19,11 +19,18 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 const DonationCandidates = ({ classes, ...props }) => {
-  const [currentId, setCurrentId] = useState(null);
+  const [currentId, setCurrentId] = useState(0);
 
   useEffect(() => {
     props.fetchAllDonatingCandidates();
   }, []);
+
+  const onDelete = (id) => {
+    if (window.confirm("Are you sure you want to delete this record?"))
+      props.deleteDonatingCandidates(id, () => {
+        window.alert("Deleted successfully");
+      });
+  };
 
   return (
     <Paper elevation={3}>
@@ -48,7 +55,7 @@ const DonationCandidates = ({ classes, ...props }) => {
                       <TableCell>{record.fullName}</TableCell>
                       <TableCell>{record.phoneNumber}</TableCell>
                       <TableCell>{record.bloodGroup}</TableCell>
-                      <tableCell>
+                      <TableCell>
                         <ButtonGroup variant="text">
                           <button>
                             <EditIcon
@@ -59,10 +66,15 @@ const DonationCandidates = ({ classes, ...props }) => {
                             />
                           </button>
                           <button>
-                            <DeleteIcon color="secondary" />
+                            <DeleteIcon
+                              color="secondary"
+                              onClick={() => {
+                                onDelete(record.id);
+                              }}
+                            />
                           </button>
                         </ButtonGroup>
-                      </tableCell>
+                      </TableCell>
                     </TableRow>
                   );
                 })}
@@ -81,6 +93,7 @@ const mapStateToProps = (state) => ({
 
 const mapActionsToProps = {
   fetchAllDonatingCandidates: actions.fetchAll,
+  deleteDonatingCandidates: actions.deelete,
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(DonationCandidates);
