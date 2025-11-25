@@ -63,37 +63,51 @@ const DonationCandidatesForm = ({ classes, ...props }) => {
       ...temp,
     });
 
-    if (fieldValues === values)
-      return Object.values(temp).every((x) => x === "");
+    if (fieldValues == values) return Object.values(temp).every((x) => x == "");
   };
 
   const [values, setValues, errors, setErrors, handleInputChange, resetForm] =
-    useForm(initialFieldValues, validate);
+    useForm(initialFieldValues, validate, props.setCurrentId);
 
   const inputLabel = React.useRef(null);
   const [labelWidth, setLabelWidth] = useState(0);
 
   React.useEffect(() => {
-    if (inputLabel.current) {
-      setLabelWidth(inputLabel.current.offsetWidth);
-    }
+    setLabelWidth(inputLabel.current.offsetWidth);
   }, []);
 
   // Submit handler
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log(values);
+
     if (validate()) {
-      props.createDonatingCandidates(values, () => {
-        window.alert("Inserted.");
-      });
+      if (props.currentId === 0) {
+        // Create new
+        props.createDonationCandidates(values, () => {
+          window.alert("Inserted");
+
+          resetForm();
+        });
+      } else {
+        // Update existing
+        props.updateDonationCandidates(props.currentId, values, () => {
+          window.alert("Updated");
+
+          resetForm();
+          props.setCurrentId(0);
+        });
+      }
     }
   };
 
   useEffect(() => {
-    if (props.currentId != 0)
+    if (props.currentId != 0) {
       setValues({
         ...props.DonationCandidateList.find((x) => x.id == props.currentId),
       });
+      setErrors({});
+    }
   }, [props.currentId]);
 
   return (
@@ -189,7 +203,9 @@ const DonationCandidatesForm = ({ classes, ...props }) => {
               >
                 Submit
               </Button>
-              <Button variant="outlined">Reset</Button>
+              <Button variant="outlined" onClick={resetForm}>
+                Reset
+              </Button>
             </div>
           </Grid>
         </Grid>
@@ -203,8 +219,9 @@ const mapStateToProps = (state) => ({
 });
 
 const mapActionsToProps = {
-  createDonatingCandidates: actions.create,
-  updateDonatingCandidates: actions.update,
+  createDonationCandidates: actions.create,
+  updateDonationCandidates: actions.update,
+  deleteDonationCandidates: actions.deelete,
 };
 
 export default connect(
