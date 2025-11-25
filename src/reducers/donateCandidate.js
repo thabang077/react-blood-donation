@@ -6,8 +6,6 @@ const initialState = {
 export const donatetionCandidateReducer = (state = initialState, action) => {
   switch (action.type) {
     case ACTION_TYPES.FETCH_ALL:
-      //  console.log("Reducer Payload:", action.payload); Debugging reducer payload
-
       return {
         ...state,
         list: [...action.payload],
@@ -15,7 +13,7 @@ export const donatetionCandidateReducer = (state = initialState, action) => {
     default:
       return state;
 
-    case ACTION_TYPES.CRAETE:
+    case ACTION_TYPES.CREATE:
       return {
         ...state,
         list: [...state.list, action.payload],
@@ -25,14 +23,16 @@ export const donatetionCandidateReducer = (state = initialState, action) => {
       return {
         ...state,
         list: [
-          state.map((x) => (x.id == action.payload.id ? action.payload : x)),
+          state.list.map((x) =>
+            x.id == action.payload.id ? action.payload : x
+          ),
         ],
       };
 
     case ACTION_TYPES.DELETE:
       return {
         ...state,
-        list: [state.list.filter((x) => x.id != action.payload)],
+        list: [state.list.filter((x) => x.id !== action.payload)],
       };
   }
 };
